@@ -1,0 +1,24 @@
+# Local AI YouTube Toolkit — 주요 의존성 (curated)
+# 시스템 의존성(pip 아님): ffmpeg, (GPU) NVIDIA 드라이버 + CUDA, Ollama
+
+# ── FastAPI 서버 ──
+fastapi
+uvicorn[standard]
+httpx
+python-dotenv
+pydantic
+
+# ── YouTube / STT ──
+yt-dlp
+faster-whisper
+youtube-transcript-api
+
+# ── 요약/문서 렌더 ──
+markdown
+
+# ── TTS(음성 클로닝) — GPU 권장 ──
+# torch는 CUDA 빌드 권장: setup_cuda_env.sh 참고
+torch
+qwen-tts
+soundfile
+numpy

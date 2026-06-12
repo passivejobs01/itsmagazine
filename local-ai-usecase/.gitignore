@@ -1,0 +1,52 @@
+# ── 비밀/환경설정 (절대 커밋 금지) ─────────────
+.env
+.env_*
+.env.local
+*.key
+*.pem
+
+# ── 개인 인프라/메모 (공개 금지) ───────────────
+homelab/
+projects/
+_system/
+.claude/
+MEMORY.md
+.obsidian/
+
+# ── 생성/처리 데이터 ───────────────────────────
+voices/                # 음성 클로닝 샘플(민감)
+summaries/
+transcripts/
+tts_output/
+wp_published.json
+
+# ── 오디오/미디어 산출물 (용량 큼) ─────────────
+audio/
+*.mp3
+*.wav
+*.m4a
+*.srt
+
+# ── 쿠키/텍스트 ────────────────────────────────
+*.txt
+!requirements.txt
+
+# ── Python ─────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+.venv/
+venv/
+env/
+
+# ── Jupyter ────────────────────────────────────
+*.ipynb
+.ipynb_checkpoints/
+
+# ── IDE/OS ─────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
