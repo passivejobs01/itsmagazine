@@ -12,7 +12,6 @@ import html
 import logging
 import os
 import re
-import subprocess
 from pathlib import Path
 from typing import Optional
 from urllib.parse import quote
@@ -28,15 +27,9 @@ load_dotenv(_env_file)
 
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import asynccontextmanager
-from datetime import datetime, timedelta, timezone
-
-# faster-whisper (STT) — 설치 안 된 경우에도 서버 기동은 정상.
-# 실제 STT는 video_pipeline.transcribe에서 수행하므로 여기서는 가용 여부만 확인한다.
-import importlib.util
-_WHISPER_AVAILABLE = importlib.util.find_spec("faster_whisper") is not None
+from datetime import datetime
 
 import httpx
-import yt_dlp
 from fastapi import BackgroundTasks, FastAPI, File, Form, HTTPException, Query, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
@@ -48,7 +41,6 @@ from pydantic import BaseModel
 try:
     from video_pipeline import (
         build_summary_prompt,
-        check_ollama,
         free_whisper_models,
         prepare_audio,
         sanitize_filename,
@@ -85,13 +77,7 @@ except ImportError:
 # ──────────────────────────────────────────────
 # 설정
 # ──────────────────────────────────────────────
-MY_CHANNEL_URL = os.getenv("MY_CHANNEL_URL", "")
-
 PORT = int(os.getenv("PORT", "8003"))
-
-# YouTube Data API v3
-YOUTUBE_API_KEY  = os.getenv("YOUTUBE_API_KEY", "")
-YOUTUBE_API_BASE = "https://www.googleapis.com/youtube/v3"
 
 # Ollama (로컬 LLM 요약) — STT·요약 모두 서버 로컬(ubuntu) 리소스 사용. 요약 모델은 SUMMARY_MODEL.
 OLLAMA_HOST  = os.getenv("OLLAMA_HOST", "http://localhost:11434")
@@ -113,9 +99,6 @@ TG_TOPIC_SUMMARY  = os.getenv("TG_TOPIC_SUMMARY", "")   # 📺 영상 요약 토
 TG_TOPIC_BLOG     = os.getenv("TG_TOPIC_BLOG", "")      # 📰 블로그 발행 토픽 thread_id
 TG_TOPIC_TTS      = os.getenv("TG_TOPIC_TTS", "")       # 🎙 음성 클로닝 토픽 thread_id
 TTS_DEFAULT_VOICE = os.getenv("TTS_DEFAULT_VOICE", "")  # 텔레그램 TTS 기본 음성(미지정 시 첫 등록 음성)
-
-# 로컬 파일 저장 경로 (FastAPI가 직접 파일을 쓸 때 사용)
-RESEARCH_BASE_DIR = os.getenv("RESEARCH_BASE_DIR", "")
 
 # 오디오 파일 저장 경로
 AUDIO_DIR = os.getenv("AUDIO_DIR", str(Path(__file__).parent / "audio"))
