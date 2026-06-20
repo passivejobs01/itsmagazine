@@ -1,0 +1,9 @@
+# Ubuntu Local AI 홈서버 — 설치 점검 샘플 의존성
+# check_ollama.py 는 표준 라이브러리(urllib)만 사용 → 별도 설치 불필요.
+
+# CUDA 빌드로 설치 권장 (CPU 빌드면 GPU 인식 안 됨):
+#   pip install torch --index-url https://download.pytorch.org/whl/cu126
+torch
+
+# STT 엔진 (CTranslate2 포함, GPU엔 cuDNN 필요)
+faster-whisper
