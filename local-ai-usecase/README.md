@@ -31,11 +31,13 @@
 | `subtitle_gen.py` | 자막(SRT) 생성기 |
 | `tts_tester.html` | TTS API 로컬 테스터(브라우저) |
 | `test_ollama.py`, `test_api.py` | 연결/엔드포인트 테스트 |
-| `setup_cuda_env.sh` | GPU venv + 의존성 셋업 |
 | `API_문서.md` | API 엔드포인트 문서 |
 | `.env.example` | 환경설정 예시(복사해서 `.env`로) |
 
 ## 설치
+
+> 이 저장소의 도구들은 **홈 공용 venv 하나(`~/.venv`)** 를 함께 씁니다.
+> 도구마다 venv를 따로 만들지 말고, 저장소 **루트의 `setup_cuda_env.sh`** 로 한 번에 셋업하세요.
 
 ### 1) Python + 시스템 의존성
 Python **3.10+** 필요. ffmpeg도 있어야 합니다.
@@ -45,32 +47,30 @@ sudo apt update && sudo apt install -y python3 python3-venv python3-pip ffmpeg
 python3 --version            # 3.10 이상 확인
 ```
 
-### 2) 가상환경 생성·활성화
+### 2) 공용 venv + 의존성 (한 번에)
+저장소 루트에서 실행하면 **`~/.venv` 생성 + CUDA PyTorch + 각 도구 requirements** 까지 처리합니다.
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate            # Windows: .venv\Scripts\activate
-python -m pip install --upgrade pip wheel
+cd ..                  # 저장소 루트로 (setup_cuda_env.sh 위치)
+bash setup_cuda_env.sh
+source ~/.venv/bin/activate
 ```
+> 수동으로 하려면: `python3 -m venv ~/.venv && source ~/.venv/bin/activate`
+> → `pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu126`
+> → `pip install -r local-ai-usecase/requirements.txt`
 
-### 3) 패키지 설치
-```bash
-pip install -r requirements.txt
-```
-> **GPU(CUDA)** 로 STT/TTS를 돌리려면 PyTorch CUDA 빌드가 필요합니다.
-> `bash setup_cuda_env.sh` 를 쓰면 **venv 생성 + CUDA PyTorch + 의존성**까지 한 번에 처리합니다
-> (이 경우 2~3단계 대신 이 스크립트 하나면 됩니다).
-
-### 4) 환경설정 & 로컬 AI
+### 3) 환경설정 & 로컬 AI
 ```bash
 cp .env.example .env                 # 값 채우기 (토큰/도메인 등)
 # Ollama 설치(https://ollama.com) 후 모델 받기
 ollama pull gemma4:12b               # 요약/블로그용 LLM
 ```
 
-### 5) 실행
+### 4) 실행
 ```bash
+source ~/.venv/bin/activate          # 공용 venv 활성화
 python fastapi_linux.py
 # 또는 systemd 서비스로 등록해 상시 실행
+#   ExecStart=/home/<user>/.venv/bin/python /home/<user>/itsmagazine/local-ai-usecase/fastapi_linux.py
 ```
 
 ## 텔레그램 사용
