@@ -33,6 +33,7 @@
 | `test_ollama.py`, `test_api.py` | 연결/엔드포인트 테스트 |
 | `API_문서.md` | API 엔드포인트 문서 |
 | `.env.example` | 환경설정 예시(복사해서 `.env`로) |
+| `fastapi_linux.service` | systemd 서비스 유닛(부팅 시 자동 실행) — 경로는 환경에 맞게 수정 |
 
 ## 설치
 

@@ -1,0 +1,22 @@
+[Unit]
+Description=Content Tools FastAPI Server (fastapi_linux)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=hyunaprk
+Group=hyunaprk
+# 앱 위치 = 저장소 클론 경로의 local-ai-usecase 폴더 (.env_linux 도 여기서 로드)
+WorkingDirectory=/home/hyunaprk/itsmagazine/local-ai-usecase
+# 홈 공용 venv(~/.venv)의 python 으로 실행 (setup_cuda_env.sh 가 만든 것)
+ExecStart=/home/hyunaprk/.venv/bin/python /home/hyunaprk/itsmagazine/local-ai-usecase/fastapi_linux.py
+Restart=on-failure
+RestartSec=5
+# (cuDNN 오류 나는 환경에서만) Environment=LD_LIBRARY_PATH=...nvidia/cudnn/lib  — 레퍼런스 서버엔 불필요
+# 로그는 journald 로: `journalctl -u fastapi_linux -f`
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
