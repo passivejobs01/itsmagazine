@@ -1,0 +1,21 @@
+# go2rtc 설정 — go2rtc.exe 와 같은 폴더에 둔다
+#
+#   ⚠️ video= 뒤의 장치 이름은 아래 명령으로 확인한 값을 그대로 넣는다
+#        ffmpeg -list_devices true -f dshow -i dummy
+#
+#   ⚠️ video_size / framerate 는 아래 명령으로 확인한 조합만 쓴다
+#        ffmpeg -list_options true -f dshow -i video="장치이름"
+#      표에 없는 값을 쓰면  [dshow] Could not set video options  로 실패한다
+
+api:  { listen: ":1984" }     # 웹 UI · 스냅샷 API
+rtsp: { listen: ":8554" }     # RTSP 스트림
+log:  { level: info }
+
+ffmpeg:
+  # go2rtc 윈도 바이너리에는 FFmpeg 이 들어 있지 않다. 따로 받아서 경로를 적는다.
+  # (PATH 에 있으면 이 줄은 생략 가능)
+  bin: C:/ffmpeg/bin/ffmpeg.exe
+
+streams:
+  # input_format=mjpeg 를 빼면 ffmpeg 이 무압축(yuyv422)을 골라 프레임이 급감한다
+  webcam: ffmpeg:device?video=Cox cpc1080&input_format=mjpeg&video_size=1280x720&framerate=30#video=h264
