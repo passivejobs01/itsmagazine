@@ -54,8 +54,8 @@ svc_why() {   # 왜 건너뛰었는지 한 줄로
   case "$1" in
     dufs)      echo "4장을 아직 안 했습니다" ;;
     jellyfin)  echo "5장을 아직 안 했습니다" ;;
-    syncthing) echo "8장을 아직 안 했습니다 — 나중에 이 스크립트를 다시 실행하세요" ;;
-    dash)      echo "7장을 아직 안 했습니다" ;;
+    syncthing) echo "6장을 아직 안 했습니다 — 나중에 이 스크립트를 다시 실행하세요" ;;
+    dash)      echo "8장을 아직 안 했습니다" ;;
     pyapp)     echo "부록 A 를 아직 안 했습니다" ;;
     nodeapp)   echo "부록 A 를 아직 안 했습니다 (Node 미설치)" ;;
   esac
