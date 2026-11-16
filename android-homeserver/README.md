@@ -90,13 +90,13 @@ dpkg -l | grep -c linux-image     # → 0
 
 ### 앱 5개 — 🔴 반드시 **같은 곳**에서 받으세요
 
-| 앱 | 역할 |
-|---|---|
-| **Termux** | 본체. 리눅스 환경 |
-| **Termux:Boot** | 부팅 시 자동 실행 |
-| **Termux:API** | 배터리·센서 등 안드로이드 기능 연결 |
+| 앱                 | 역할                     |
+| ----------------- | ---------------------- |
+| **Termux**        | 본체. 리눅스 환경             |
+| **Termux:Boot**   | 부팅 시 자동 실행             |
+| **Termux:API**    | 배터리·센서 등 안드로이드 기능 연결   |
 | **Termux:Widget** | 홈화면 버튼으로 서버 되살리기 (7-6) |
-| **Tailscale** | 외부 접속 |
+| **Tailscale**     | 외부 접속                  |
 
 > 🔴 **Termux와 플러그인(:Boot, :API, :Widget)은 서명이 같아야 동작합니다.**
 > 하나는 Play 스토어, 하나는 F-Droid 식으로 섞으면 **플러그인이 조용히 무시됩니다.**
@@ -414,7 +414,8 @@ sh ~/get-files.sh
 | `install-syncthing.sh` | 6장 — 동기화 **설치 + 첫 실행** |
 | `start-syncthing.sh` | 6장 — 동기화 실행 |
 | `setup-services.sh` | 7장 — 자동시작 서비스 등록 |
-| `boot-start-services.sh` | 7장 — 부팅 스크립트 |
+| `install-boot.sh` | 7장 — 부팅 스크립트 **설치** |
+| `boot-start-services.sh` | 7장 — 부팅 스크립트 본문 |
 | `myapp/dashboard.py` | 8장 — 카메라 + 상태 대시보드 |
 | `myapp/sensors.py` | 부록 A — 🧭 **폰 센서 대시보드** |
 | `myapp/control.js` | 부록 A — 🔦 **폰 제어판** |
@@ -892,17 +893,25 @@ sv status dufs
 
 ### 7-3. 부팅 스크립트 설치
 
-앞서 받아둔 `boot-start-services.sh` 를 **정해진 위치로 옮기고 실행 권한**을 줍니다.
-
 ```bash
-mkdir -p ~/.termux/boot
-mv ~/boot-start-services.sh ~/.termux/boot/start-services.sh
-chmod +x ~/.termux/boot/start-services.sh
-ls -l ~/.termux/boot/
+sh ~/install-boot.sh
 ```
 
-> 🔴 **파일 이름과 위치가 중요합니다.** `~/.termux/boot/` 폴더 안에 있어야 하고,
-> **실행 권한(`x`)이 없으면 그냥 무시됩니다.** 위 `ls -l` 결과에 `rwx` 가 보여야 합니다.
+```
+부팅 자동시작 설치
+────────────────────────────────────────────
+  ✅ 옮김 — ~/boot-start-services.sh → ~/.termux/boot/start-services.sh
+
+  들어간 내용:
+      #!/data/data/com.termux/files/usr/bin/sh
+      termux-wake-lock
+      . /data/data/com.termux/files/usr/etc/profile.d/start-services.sh
+
+  권한:
+      -rwx------  ... start-services.sh
+
+  ✅ Termux:Boot 앱 설치됨
+```
 
 내용은 두 줄뿐입니다.
 
@@ -911,16 +920,25 @@ ls -l ~/.termux/boot/
 | `termux-wake-lock` | 안드로이드가 **절전으로 재우지 못하게** 붙잡습니다 |
 | `. start-services.sh` | **runit을 기동** → 등록된 서비스가 전부 따라 올라옵니다 |
 
+> 🔴 **위치와 실행 권한, 둘 다 맞아야 합니다.** `~/.termux/boot/` 폴더 안에 있어야 하고,
+> **실행 권한(`x`)이 없으면 Termux:Boot 이 그냥 무시합니다** — 에러가 안 나서
+> 원인을 찾기 어려운 자리입니다. 그래서 스크립트가 **권한까지 찍어서 보여줍니다.**
+>
+> ✅ **여러 번 실행해도 안전합니다.** 이미 옮겼으면 "이미 있음" 으로 넘어가고,
+> 받아둔 파일이 없으면 **직접 만들어 줍니다.**
+
 #### 📝 직접 만들고 싶다면 (한 줄 명령)
 
-받지 않고 직접 만들려면, 여러 줄을 입력하는 대신 **한 줄로** 끝낼 수 있습니다.
+스크립트가 하는 일은 결국 이것뿐입니다.
 
 ```bash
-mkdir -p ~/.termux/boot && printf '%s\n%s\n%s\n' '#!/data/data/com.termux/files/usr/bin/sh' 'termux-wake-lock' '. /data/data/com.termux/files/usr/etc/profile.d/start-services.sh' > ~/.termux/boot/start-services.sh && chmod +x ~/.termux/boot/start-services.sh && cat ~/.termux/boot/start-services.sh
+mkdir -p ~/.termux/boot && printf '%s
+%s
+%s
+' '#!/data/data/com.termux/files/usr/bin/sh' 'termux-wake-lock' '. /data/data/com.termux/files/usr/etc/profile.d/start-services.sh' > ~/.termux/boot/start-services.sh && chmod +x ~/.termux/boot/start-services.sh && cat ~/.termux/boot/start-services.sh
 ```
 
 마지막 `cat` 으로 내용이 제대로 들어갔는지 바로 확인됩니다.
-
 
 ### 7-4. 🔴 안드로이드 절전 설정 — 폰이 서버를 재우지 못하게
 

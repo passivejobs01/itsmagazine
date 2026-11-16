@@ -73,6 +73,7 @@ fetch start-jellyfin.sh      "$HOME/start-jellyfin.sh"
 fetch install-syncthing.sh   "$HOME/install-syncthing.sh"
 fetch start-syncthing.sh     "$HOME/start-syncthing.sh"
 fetch setup-services.sh      "$HOME/setup-services.sh"
+fetch install-boot.sh        "$HOME/install-boot.sh"
 fetch boot-start-services.sh "$HOME/boot-start-services.sh"
 
 echo
@@ -90,7 +91,8 @@ fetch myapp/server.js    "$HOME/myapp/server.js"
 chmod +x "$HOME/install-dufs.sh" "$HOME/start-dufs.sh" \
          "$HOME/install-jellyfin.sh" "$HOME/start-jellyfin.sh" \
          "$HOME/install-syncthing.sh" "$HOME/start-syncthing.sh" \
-         "$HOME/setup-services.sh" "$HOME/boot-start-services.sh" 2>/dev/null
+         "$HOME/setup-services.sh" "$HOME/install-boot.sh" \
+         "$HOME/boot-start-services.sh" 2>/dev/null
 
 echo
 echo "────────────────────────────────────────────"
@@ -114,6 +116,7 @@ echo "    start-jellyfin.sh        5장  미디어 서버 실행"
 echo "    install-syncthing.sh     6장  동기화 설치 + 첫 실행"
 echo "    start-syncthing.sh       6장  동기화 실행"
 echo "    setup-services.sh        7장  자동시작 서비스 등록"
+echo "    install-boot.sh          7장  부팅 스크립트 설치"
 echo "    boot-start-services.sh   7장  부팅 스크립트"
 echo "    myapp/dashboard.py       8장  카메라 + 상태 대시보드"
 echo "    myapp/sensors.py         부록 A  폰 센서 대시보드"
