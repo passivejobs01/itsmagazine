@@ -1272,6 +1272,7 @@ bash ~/setup-services.sh
 | **서비스가 계속 재시작된다** | `run` 스크립트가 **포그라운드가 아님**. `&` 나 데몬 모드를 빼고 `exec` 사용 |
 | 🔴 **`sv restart jellyfin` 이 `timeout` 으로 끝난다** | Jellyfin 은 `proot` 안에서 돌아서 **종료 신호가 안쪽까지 전달되지 않습니다.** 겉보기엔 멈춘 것 같지만 그대로 돌고 있습니다. 안쪽 프로세스를 직접 끝내면 `runit` 이 알아서 다시 띄웁니다: `kill -9 $(pgrep -f "usr/bin/jellyfin --webdir")` |
 | 🔴 **받은 스크립트가 `set: Illegal option -` 로 죽는다** | 줄바꿈이 **윈도식(CRLF)** 인 파일입니다. 윈도 PC를 거쳐 옮겼다면 생깁니다. 고치기: `sed -i 's/\r$//' ~/파일이름.sh` |
+| 🔴 **`Failed to get local interface addresses` / `Permission denied (os error 13)`** | **안드로이드 11 이후 기기**에서 납니다. 서버가 "어떤 주소로 열렸는지" 보려고 인터페이스 목록을 읽는데 안드로이드가 막습니다. 🔑 **`start-dufs.sh` 는 이걸 알아서 처리합니다** — 실패하면 실제 주소를 찾아 다시 엽니다(`📌 … 실제 주소로 다시 엽니다` 가 보이면 정상). 안 고쳐지면 스크립트를 다시 받으세요: `sh ~/get-files.sh` |
 | **Syncthing 화면이 안 뜬다**(연결은 되는데 빈 화면) | 🔑 **`http` 로 접속한 것.** 폰 바깥에서는 **`https://<폰주소>:8384/`** 입니다(8-1). 인증서 경고는 **고급 ▸ 계속 진행** |
 | **Syncthing에 "폴더 경로 오류" 가 보인다** | `generate` 가 남긴 **빈 폴더 항목**. `sh ~/install-syncthing.sh` 가 지워줍니다 — 🔴 먼저 `sv down syncthing` 으로 멈추고 실행하세요 |
 | **Syncthing이 PC를 못 찾는다** | 같은 Wi-Fi면 **로컬 탐색**이 켜져 있어야 합니다(8-1에서 끄지 말라고 한 항목). 밖에서 쓸 거면 **양쪽 다 Tailscale**에 들어와 있어야 합니다 |
