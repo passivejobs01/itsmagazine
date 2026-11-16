@@ -823,7 +823,7 @@ https://<폰주소>:8384/
 앞서 받아둔 스크립트가 **지금까지 깐 서버를 runit에 등록**해 줍니다.
 
 ```bash
-bash ~/setup-services.sh
+sh ~/setup-services.sh
 ```
 
 20초쯤 뒤 상태가 출력됩니다. **전부 `run:` 이면 성공**입니다.
@@ -846,7 +846,7 @@ run: syncthing: (pid ...)
 등록하므로, 건너뛴 장이 있으면 `건너뜀: …` 으로 알려줍니다. 나중에 그 장을 하고
 **다시 실행하면** 그때 추가됩니다.
 
-> 💡 **이름을 지정할 수도 있습니다** — `bash ~/setup-services.sh dash` 처럼요.
+> 💡 **이름을 지정할 수도 있습니다** — `sh ~/setup-services.sh dash` 처럼요.
 > 8장(카메라)과 부록 A 에서 그렇게 씁니다.
 
 #### 이 스크립트가 만드는 것
@@ -1184,7 +1184,7 @@ dufs 아이디·비밀번호**입니다. 영상이 보이면 **`Ctrl+C`** 로 �
 7장에서 쓴 **그 스크립트에 이름만 붙여** 부릅니다.
 
 ```bash
-bash ~/setup-services.sh dash
+sh ~/setup-services.sh dash
 ```
 
 `run: dash: (pid ...)` 가 나오면 끝입니다. 이제 **부팅할 때 알아서 뜨고, 죽으면 되살아납니다.**
@@ -1444,7 +1444,7 @@ node ~/myapp/control.js
 7장에서 쓴 **그 스크립트에 이름만 붙여** 부릅니다.
 
 ```bash
-bash ~/setup-services.sh pyapp nodeapp
+sh ~/setup-services.sh pyapp nodeapp
 ```
 
 | 서비스 | 포트 | 실행하는 것 |

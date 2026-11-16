@@ -1,9 +1,12 @@
-#!/data/data/com.termux/files/usr/bin/bash
+#!/data/data/com.termux/files/usr/bin/sh
 # runit 서비스 등록 — 서버를 자동 기동·자동 복구 대상으로 만든다.
 #
-#   bash ~/setup-services.sh                  깔려 있는 서버를 전부 등록
-#   bash ~/setup-services.sh dash             특정 서비스만 등록
-#   bash ~/setup-services.sh pyapp nodeapp    여러 개 지정
+#   sh ~/setup-services.sh                  깔려 있는 서버를 전부 등록
+#   sh ~/setup-services.sh dash             특정 서비스만 등록
+#   sh ~/setup-services.sh pyapp nodeapp    여러 개 지정
+#
+# 🔑 bash 전용 문법(배열)을 쓰지 않는다. `sh` 로 불러도, `bash` 로 불러도 똑같이 된다 —
+#    가이드의 다른 스크립트가 전부 `sh` 라서 여기만 다르면 그게 함정이 된다.
 #
 # 🔑 "깔려 있는 것만" 등록한다. 그래서 8장(Syncthing)처럼 나중에 한 장을 더 해도
 #    **이 스크립트를 다시 실행하면** 새로 깐 것이 추가된다.
@@ -81,7 +84,7 @@ mk_service() {   # $1=서비스명  $2=run 스크립트 본문
   echo "등록: $1"
 }
 
-enabled=()
+enabled=""
 for s in $TARGETS; do
   if ! svc_run "$s" >/dev/null 2>&1; then
     echo "🔴 모르는 서비스: $s"
@@ -90,13 +93,13 @@ for s in $TARGETS; do
   fi
   if svc_ready "$s"; then
     mk_service "$s" "$(svc_run "$s")"
-    enabled+=("$s")
+    enabled="$enabled $s"
   else
     echo "건너뜀: $s ($(svc_why "$s"))"
   fi
 done
 
-if [ ${#enabled[@]} -eq 0 ]; then
+if [ -z "$(echo $enabled)" ]; then
   echo
   echo "🔴 등록할 것이 없습니다. 해당 장을 먼저 끝내고 다시 실행하세요."
   exit 1
@@ -105,7 +108,7 @@ fi
 echo
 echo "자동시작 켜는 중…"
 sleep 8                      # runsvdir 이 새 폴더를 발견할 때까지(약 5초마다 훑는다)
-for s in "${enabled[@]}"; do
+for s in $enabled; do
   # ⚠️ 이미 켜져 있으면 sv-enable 이 실패한다. 다시 실행해도 멈추지 않게 받아 넘긴다.
   sv-enable "$s" || echo "  (이미 켜져 있음: $s)"
 done
@@ -113,4 +116,4 @@ done
 echo
 echo "── 상태 (전부 run: 이면 성공) ──"
 sleep 15
-sv status sshd "${enabled[@]}"
+sv status sshd $enabled
