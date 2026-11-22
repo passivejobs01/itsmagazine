@@ -35,6 +35,7 @@ svc_run() {
     dash)      echo 'exec python "$HOME/myapp/dashboard.py" 2>&1' ;;
     pyapp)     echo 'exec python "$HOME/myapp/sensors.py" 2>&1' ;;
     nodeapp)   echo 'exec node "$HOME/myapp/control.js" 2>&1' ;;
+    game)      echo 'exec python "$HOME/myapp/game.py" 2>&1' ;;
     *)         return 1 ;;
   esac
 }
@@ -49,6 +50,7 @@ svc_ready() {
     dash)      [ -f "$HOME/myapp/dashboard.py" ] && command -v python >/dev/null 2>&1 ;;
     pyapp)     [ -f "$HOME/myapp/sensors.py" ] && command -v python >/dev/null 2>&1 ;;
     nodeapp)   [ -f "$HOME/myapp/control.js" ] && command -v node >/dev/null 2>&1 ;;
+    game)      [ -f "$HOME/myapp/game.py" ] && command -v python >/dev/null 2>&1 ;;
     *)         return 1 ;;
   esac
 }
@@ -61,6 +63,7 @@ svc_why() {   # 왜 건너뛰었는지 한 줄로
     dash)      echo "8장을 아직 안 했습니다" ;;
     pyapp)     echo "부록 A 를 아직 안 했습니다" ;;
     nodeapp)   echo "부록 A 를 아직 안 했습니다 (Node 미설치)" ;;
+    game)      echo "myapp/game.py 가 없습니다 — get-files.sh 를 다시 실행하세요" ;;
   esac
 }
 
@@ -88,7 +91,7 @@ enabled=""
 for s in $TARGETS; do
   if ! svc_run "$s" >/dev/null 2>&1; then
     echo "🔴 모르는 서비스: $s"
-    echo "   쓸 수 있는 이름: dufs jellyfin syncthing dash pyapp nodeapp"
+    echo "   쓸 수 있는 이름: dufs jellyfin syncthing dash pyapp nodeapp game"
     exit 1
   fi
   if svc_ready "$s"; then

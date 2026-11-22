@@ -85,6 +85,7 @@ fetch myapp/sensors.py   "$HOME/myapp/sensors.py"
 fetch myapp/control.js   "$HOME/myapp/control.js"
 fetch myapp/server.py    "$HOME/myapp/server.py"
 fetch myapp/server.js    "$HOME/myapp/server.js"
+fetch myapp/game.py      "$HOME/myapp/game.py"
 
 # 실행 권한 — 🔴 이게 없으면 Termux:Boot 이 부팅 스크립트를 "그냥 무시"합니다.
 #    에러가 안 나서 원인을 찾기 어려운 자리라 여기서 한 번에 걸어 둡니다.
@@ -122,6 +123,7 @@ echo "    myapp/dashboard.py       8장  카메라 + 상태 대시보드"
 echo "    myapp/sensors.py         부록 A  폰 센서 대시보드"
 echo "    myapp/control.js         부록 A  폰 제어판"
 echo "    myapp/server.py · .js    부록 A  내 스크립트 예제"
+echo "    myapp/game.py            게임 + 순위표 (폰이 점수를 보관한다)"
 echo
 echo "  📌 내용이 궁금하면 언제든 볼 수 있습니다:  cat ~/start-dufs.sh"
 echo
